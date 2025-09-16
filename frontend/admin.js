@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearLogsBtn = document.getElementById('clear-logs-btn');
     const changePasswordBtn = document.getElementById('change-password-btn');
     
-    const API_BASE_URL = 'http://127.0.0.1:8000'; // Apunta al servidor unificado
-
+    //const API_BASE_URL = 'http://127.0.0.1:8000'; // Apunta al servidor unificado
+    const API_BASE_URL = 'URL_DEL_BACKEND_DE_RENDER';
     connectBtn.addEventListener('click', handleConnect);
     navLinks.forEach(link => link.addEventListener('click', handleNavClick));
     exportCsvBtn.addEventListener('click', downloadCSV);

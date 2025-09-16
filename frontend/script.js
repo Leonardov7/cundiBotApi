@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
           closeChat = document.getElementById('close-chat'),
           chatBubble = document.getElementById('chat-bubble');
 
-    const API_URL = 'http://127.0.0.1:8000/chat';
+    //const API_URL = 'http://127.0.0.1:8000/chat';
+    const API_BASE_URL = 'URL_DEL_BACKEND_DE_RENDER';
     let chatHistory = [], isTutorMode = false;
     let tutorState = { phase: 'idle', topic: '', currentIndex: 0 };
     const conversationId = crypto.randomUUID();

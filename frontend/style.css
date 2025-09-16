@@ -1,0 +1,113 @@
+/* frontend/style.css */
+:root {
+    --cundi-dark-green: #007B3E;
+    --cundi-lime-green: #79C000;
+    --cundi-charcoal: #4E4B48;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f4f9;
+}
+
+/* --- LÓGICA DE VISIBILIDAD PRINCIPAL --- */
+body.chat-is-open .chat-bubble {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.8);
+}
+body.chat-is-open .chat-window {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* --- ESTILOS DE LA BURBUJA --- */
+.chat-bubble {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 65px;
+    height: 65px;
+    background-color: var(--cundi-dark-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+    opacity: 1;
+    visibility: visible;
+}
+.chat-bubble:hover { transform: scale(1.1); }
+.chat-bubble img { width: 36px; height: 36px; }
+
+/* --- ESTILOS DE LA VENTANA DE CHAT --- */
+.chat-window {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 370px;
+    max-width: 90vw;
+    height: 550px;
+    max-height: 80vh;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+.chat-header {
+    background-color: var(--cundi-dark-green);
+    color: white;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    transition: background-color 0.3s;
+}
+.header-logo { width: 30px; height: 30px; }
+.chat-header h3 { margin: 0; font-size: 1.1em; }
+#close-chat, #tutor-mode-btn { background: none; border: none; color: white; cursor: pointer; padding: 5px; border-radius: 5px; transition: background-color 0.2s; }
+#tutor-mode-btn { margin-left: auto; }
+#tutor-mode-btn:hover, #close-chat:hover { background-color: rgba(0,0,0,0.2); }
+#close-chat { font-size: 24px; line-height: 1; }
+#tutor-mode-btn svg { display: block; }
+
+.chat-body {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #F8F9FA;
+}
+.chat-message { padding: 10px 15px; border-radius: 18px; max-width: 85%; line-height: 1.4; word-wrap: break-word; }
+.user-message { background-color: #E9ECEF; color: var(--cundi-charcoal); align-self: flex-end; border-bottom-right-radius: 4px; }
+.bot-message { background-color: var(--cundi-dark-green); color: white; align-self: flex-start; border-bottom-left-radius: 4px; transition: background-color 0.3s; }
+
+.chat-footer { padding: 10px; display: flex; border-top: 1px solid #ddd; }
+#chat-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 20px; padding: 10px 15px; font-size: 1em; }
+#send-btn { background: var(--cundi-lime-green); border: none; color: white; border-radius: 50%; width: 40px; height: 40px; margin-left: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s; }
+#send-btn:hover { background: #5a9000; }
+#send-btn svg { width: 20px; height: 20px; }
+
+/* --- ESTILOS MODO TUTOR --- */
+body.tutor-mode-active .chat-window { border: 2px solid var(--cundi-lime-green); }
+body.tutor-mode-active .chat-header { background-color: var(--cundi-lime-green); }
+body.tutor-mode-active .chat-bubble { background-color: var(--cundi-lime-green); }
+body.tutor-mode-active .bot-message { background-color: var(--cundi-charcoal); }
+body.tutor-mode-active #send-btn { background-color: var(--cundi-dark-green); }
+body.tutor-mode-active #tutor-mode-btn { background-color: rgba(0,0,0,0.2); }

@@ -1,0 +1,236 @@
+/* frontend/admin.css */
+:root {
+    --primary-color: #007B3E;
+    --secondary-color: #79C000;
+    --text-color: #4E4B48;
+    --bg-color: #f4f7f6;
+    --sidebar-bg: #2c3e50;
+    --danger-color: #e74c3c;
+    --light-gray: #ccc;
+    --white-color: #fff;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    display: flex;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    color: var(--white-color);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h2 {
+    text-align: center;
+    padding: 20px 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.sidebar nav {
+    flex-grow: 1;
+    padding: 20px 0;
+}
+
+.sidebar .nav-link {
+    display: block;
+    color: var(--white-color);
+    text-decoration: none;
+    padding: 15px 20px;
+    transition: background-color 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--primary-color);
+    border-left: 3px solid var(--secondary-color);
+}
+
+.main-content {
+    margin-left: 250px;
+    flex-grow: 1;
+    padding: 25px;
+}
+
+header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.auth-section {
+    display: flex;
+    gap: 10px;
+}
+
+input[type="password"],
+input[type="date"],
+input[type="file"] {
+    padding: 10px;
+    border: 1px solid var(--light-gray);
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+button {
+    padding: 10px 18px;
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: filter 0.2s;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+button:hover {
+    filter: brightness(0.9);
+}
+
+main.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.content-panel {
+    display: none;
+    animation: fadeIn 0.5s;
+}
+
+.content-panel.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    text-align: center;
+}
+
+.stat-card {
+    background: var(--white-color);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card h4 {
+    margin: 0 0 10px 0;
+    color: var(--text-color);
+    font-size: 1em;
+}
+
+.stat-card p {
+    margin: 0;
+    font-size: 2.2em;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.table-container {
+    max-height: 65vh;
+    overflow-y: auto;
+    background: var(--white-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.form-section,
+.danger-zone {
+    background-color: var(--white-color);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+}
+
+.danger-zone {
+    border-left: 5px solid var(--danger-color);
+}
+
+.danger-btn {
+    background-color: var(--danger-color);
+}
+
+.status {
+    margin-top: 15px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+    display: none;
+}
+
+.status.active {
+    display: block;
+}
+
+.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}

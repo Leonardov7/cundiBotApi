@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CundiBot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Página de la Universidad de Cundinamarca</h1>
+    <p>Este es un ejemplo de cómo la burbuja del CundiBot se integraría en cualquier página existente.</p>
+
+    <div class="chat-bubble" id="chat-bubble">
+        <img src="icons/chatbot.png" alt="Abrir Chat" id="bubble-icon-img">
+    </div>
+
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+            <img src="icons/chatbot.png" alt="Logo" class="header-logo">
+            <h3>CundiBot</h3>
+            <button id="tutor-mode-btn" title="Activar Modo Tutor">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c0 5 4 5 4 5h4s4 0 4-5v-5"></path></svg>
+            </button>
+            <button id="close-chat">&times;</button>
+        </div>
+        <div class="chat-body" id="chat-body">
+             <div class="chat-message bot-message">¡Hola! Soy CundiBot. ¿En qué puedo ayudarte hoy?</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" placeholder="Escribe un mensaje..." autocomplete="off">
+            <button id="send-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

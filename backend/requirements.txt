@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+langchain
+langchain-openai
+langchain-community
+pypdf
+faiss-cpu
+python-dotenv
+sqlalchemy
+passlib[bcrypt]

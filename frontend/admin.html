@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - CundiBot</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>CundiBot</h2>
+        <nav>
+            <a href="#" class="nav-link active" data-target="dashboard">📊 Dashboard</a>
+            <a href="#" class="nav-link" data-target="conversations">📜 Conversaciones</a>
+            <a href="#" class="nav-link" data-target="knowledge">📚 Base de Conocimiento</a>
+            <a href="#" class="nav-link" data-target="settings">⚙️ Configuración</a>
+        </nav>
+    </div>
+    <div class="main-content">
+        <header>
+            <div class="auth-section">
+                <input type="password" id="apiKey" placeholder="Clave de API de Admin">
+                <button id="connectBtn">Conectar</button>
+            </div>
+        </header>
+        <main id="content-area" class="disabled">
+            <div id="dashboard" class="content-panel active">
+                <div class="panel-header">
+                    <h2>Métricas de Uso</h2>
+                    <div class="date-filters">
+                        <button id="export-csv-btn">Exportar Resumen CSV</button>
+                    </div>
+                </div>
+                <div class="stats-grid" id="stats-grid-container"></div>
+            </div>
+            <div id="conversations" class="content-panel">
+                <h2>Historial de Conversaciones Recientes</h2>
+                <div class="table-container" id="conversations-container"></div>
+            </div>
+            <div id="knowledge" class="content-panel">
+                <h2>Actualizar Base de Conocimiento</h2>
+                <input type="file" id="fileUpload" multiple accept=".pdf">
+                <button id="uploadBtn">Subir y Regenerar</button>
+                <div id="upload-status" class="status"></div>
+            </div>
+            <div id="settings" class="content-panel">
+                <h2>Configuración</h2>
+                <div class="form-section">
+                    <h3>Cambiar Contraseña de Administrador</h3>
+                    <p>La clave que usaste para conectar se usará como 'Contraseña Actual'.</p>
+                    <label for="new-password">Nueva Contraseña:</label>
+                    <input type="password" id="new-password" placeholder="Ingresa la nueva contraseña">
+                    <button id="change-password-btn">Cambiar Contraseña</button>
+                    <div id="password-status" class="status"></div>
+                </div>
+                <div class="danger-zone">
+                    <h3>Zona de Peligro</h3>
+                    <p>Esta acción eliminará permanentemente todo el historial.</p>
+                    <button id="clear-logs-btn" class="danger-btn">Limpiar Logs</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="admin.js"></script>
+</body>
+</html>

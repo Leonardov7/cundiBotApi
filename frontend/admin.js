@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const changePasswordBtn = document.getElementById('change-password-btn');
     
     //const API_BASE_URL = 'http://127.0.0.1:8000'; // Apunta al servidor unificado
-    const API_BASE_URL = 'https://cundibotapi-chat.onrender.com/admin.html';
+    const API_BASE_URL = 'https://cundibotapi-admin.onrender.com';
     connectBtn.addEventListener('click', handleConnect);
     navLinks.forEach(link => link.addEventListener('click', handleNavClick));
     exportCsvBtn.addEventListener('click', downloadCSV);

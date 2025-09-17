@@ -78,34 +78,35 @@ class ChangePasswordRequest(BaseModel): new_password: str
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest, db: Session = Depends(get_db)):
-    if conversation_chain is None:
+    if not conversation_chain:
         raise HTTPException(status_code=503, detail="La base de conocimiento no está inicializada.")
     
     # --- CAMBIO CLAVE AQUÍ ---
-    # Convertimos la lista de listas del historial a una lista de tuplas
+    # Convertimos el historial de listas de JS a tuplas de Python, que es el formato que la cadena espera.
     history_as_tuples = [tuple(item) for item in request.chat_history]
     
     with get_openai_callback() as cb:
         try:
+            # Pasamos el historial ya convertido a la cadena
             result = conversation_chain.invoke({
                 "question": request.question,
-                "chat_history": history_as_tuples # Usamos el historial convertido
+                "chat_history": history_as_tuples
             })
             answer = result["answer"]
             
-            log_entry = ConversationLog(
-                question=request.question, 
-                answer=answer, 
-                total_tokens=cb.total_tokens, 
+            # La lógica de guardado en la base de datos no cambia
+            log = ConversationLog(
+                question=request.question,
+                answer=answer,
+                total_tokens=cb.total_tokens,
                 total_cost=cb.total_cost,
-                mode="normal" # Asumiendo que el chat principal es modo normal
+                mode=request.mode
             )
-            db.add(log_entry)
+            db.add(log)
             db.commit()
             
             return ChatResponse(answer=answer)
         except Exception as e:
-            # Imprime el error completo en los logs de Render para un mejor diagnóstico
             import traceback
             traceback.print_exc()
             raise HTTPException(status_code=500, detail=str(e))

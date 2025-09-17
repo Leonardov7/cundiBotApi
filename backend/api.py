@@ -78,38 +78,38 @@ class ChangePasswordRequest(BaseModel): new_password: str
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest, db: Session = Depends(get_db)):
-    if not conversation_chain:
-        raise HTTPException(status_code=503, detail="La base de conocimiento no está inicializada.")
+    if not conversation_chain: raise HTTPException(503, "Base de conocimiento no inicializada.")
     
-    # --- CAMBIO CLAVE AQUÍ ---
-    # Convertimos el historial de listas de JS a tuplas de Python, que es el formato que la cadena espera.
     history_as_tuples = [tuple(item) for item in request.chat_history]
     
     with get_openai_callback() as cb:
         try:
-            # Pasamos el historial ya convertido a la cadena
+            # Usa el 'full_prompt' para la IA
             result = conversation_chain.invoke({
-                "question": request.question,
+                "question": request.full_prompt, 
                 "chat_history": history_as_tuples
             })
             answer = result["answer"]
             
-            # La lógica de guardado en la base de datos no cambia---
-            log = ConversationLog(
-                question=request.question,
+            # Usa el 'raw_question' para guardar en la base de datos
+            log_entry = ConversationLog(
+                conversation_id=request.conversation_id,
+                question=request.raw_question, 
                 answer=answer,
+                mode=request.mode,
+                prompt_tokens=cb.prompt_tokens,
+                completion_tokens=cb.completion_tokens,
                 total_tokens=cb.total_tokens,
-                total_cost=cb.total_cost,
-                mode=request.mode
+                prompt_cost=(cb.prompt_tokens / 1_000_000) * 5.0,
+                completion_cost=(cb.completion_tokens / 1_000_000) * 15.0,
+                total_cost=cb.total_cost
             )
-            db.add(log)
-            db.commit()
-            
+            db.add(log_entry); db.commit()
             return ChatResponse(answer=answer)
         except Exception as e:
             import traceback
             traceback.print_exc()
-            raise HTTPException(status_code=500, detail=str(e))
+            raise HTTPException(500, str(e))
 
 
 

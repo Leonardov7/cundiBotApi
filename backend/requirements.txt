@@ -9,3 +9,4 @@ python-dotenv
 sqlalchemy
 passlib[bcrypt]
 python-multipart
+psycopg2-binary

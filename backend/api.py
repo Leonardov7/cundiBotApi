@@ -38,32 +38,19 @@ def get_db(): db = SessionLocal();_ = (yield db); db.close()
 @app.on_event("startup")
 def load_chain_on_startup():
     global conversation_chain
-    if not os.path.exists("faiss_index"):
-        print("CHAT API - ADVERTENCIA: Índice FAISS no encontrado.")
+    if not os.path.exists("faiss_index"): print("ADVERTENCIA: Índice FAISS no encontrado.")
     else:
         try:
-            system_prompt = "Eres CundiBot, un asistente de IA de la Universidad de Cundinamarca..." # Tu prompt
-            QA_PROMPT = PromptTemplate.from_template(system_prompt + "\nContexto:\n{context}\nHistorial:\n{chat_history}\nPregunta:\n{question}\nRespuesta:")
+            system_prompt = """Eres CundiBot, un asistente de IA de la Universidad de Cundinamarca. Tu comportamiento se guiará por las instrucciones detalladas incluidas en cada pregunta del usuario.
+            Utiliza el historial de la conversación y el contexto de los documentos recuperados para dar la mejor respuesta posible en cada turno."""
+            QA_PROMPT = PromptTemplate.from_template(system_prompt + "\n\nContexto de documentos:\n{context}\n\nHistorial del chat:\n{chat_history}\n\nInstrucciones y Pregunta del usuario:\n{question}\n\nRespuesta:")
             embeddings = OpenAIEmbeddings()
             vectorstore = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
             retriever = vectorstore.as_retriever()
-            
-            # --- CAMBIO CLAVE AQUÍ ---
-            # Se ha eliminado por completo el objeto 'ConversationBufferMemory'.
-            # La cadena ahora será 'stateless' (sin estado propio) y dependerá 
-            # únicamente del historial enviado por el frontend.
-            
-            conversation_chain = ConversationalRetrievalChain.from_llm(
-                llm=ChatOpenAI(model_name="gpt-4o", temperature=0.7),
-                retriever=retriever,
-                # Se ha eliminado el parámetro 'memory=memory'
-                return_source_documents=False,
-                combine_docs_chain_kwargs={"prompt": QA_PROMPT}
-            )
-            print("CHAT API - Cadena conversacional (sin estado) cargada exitosamente.")
-        except Exception as e:
-            print(f"CHAT API - Error al cargar la cadena: {e}")
-            
+            memory = ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer')
+            conversation_chain = ConversationalRetrievalChain.from_llm(llm=ChatOpenAI(model_name="gpt-4o", temperature=0.7), retriever=retriever, memory=memory, combine_docs_chain_kwargs={"prompt": QA_PROMPT})
+            print("Cadena conversacional única y flexible cargada exitosamente.")
+        except Exception as e: print(f"Error al cargar la cadena: {e}")
 
 class ChatRequest(BaseModel): 
     full_prompt: str

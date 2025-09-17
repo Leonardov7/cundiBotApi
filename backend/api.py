@@ -78,32 +78,37 @@ class ChangePasswordRequest(BaseModel): new_password: str
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest, db: Session = Depends(get_db)):
-    if not conversation_chain: raise HTTPException(503, "Base de conocimiento no inicializada.")
+    if conversation_chain is None:
+        raise HTTPException(status_code=503, detail="La base de conocimiento no está inicializada.")
+    
+    # --- CAMBIO CLAVE AQUÍ ---
+    # Convertimos la lista de listas del historial a una lista de tuplas
+    history_as_tuples = [tuple(item) for item in request.chat_history]
+    
     with get_openai_callback() as cb:
         try:
-            # La IA usa el prompt completo
             result = conversation_chain.invoke({
-                "question": request.full_prompt, 
-                "chat_history": request.chat_history
+                "question": request.question,
+                "chat_history": history_as_tuples # Usamos el historial convertido
             })
             answer = result["answer"]
             
-            # Guardamos la pregunta limpia y el ID en la BBDD
             log_entry = ConversationLog(
-                conversation_id=request.conversation_id,
-                question=request.raw_question, # <-- Pregunta limpia
-                answer=answer,
-                mode=request.mode,
-                prompt_tokens=cb.prompt_tokens,
-                completion_tokens=cb.completion_tokens,
-                total_tokens=cb.total_tokens,
-                prompt_cost=(cb.prompt_tokens / 1_000_000) * 5.0,
-                completion_cost=(cb.completion_tokens / 1_000_000) * 15.0,
-                total_cost=cb.total_cost
+                question=request.question, 
+                answer=answer, 
+                total_tokens=cb.total_tokens, 
+                total_cost=cb.total_cost,
+                mode="normal" # Asumiendo que el chat principal es modo normal
             )
-            db.add(log_entry); db.commit()
+            db.add(log_entry)
+            db.commit()
+            
             return ChatResponse(answer=answer)
-        except Exception as e: raise HTTPException(500, str(e))
+        except Exception as e:
+            # Imprime el error completo en los logs de Render para un mejor diagnóstico
+            import traceback
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=str(e))
 
 
 

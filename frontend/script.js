@@ -12,8 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'https://cundibotapi.onrender.com/chat';//nuevo
     let chatHistory = [], isTutorMode = false;
     let tutorState = { phase: 'idle', topic: '', currentIndex: 0 };
-    const conversationId = crypto.randomUUID();
-
+    const conversationId = crypto.randomUUID(); // 
 
     // --- Listeners Principales ---
     chatBubble.addEventListener('click', () => document.body.classList.add('chat-is-open'));
@@ -91,8 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         const data = await postData(API_URL, { 
-            full_prompt: questionToSend,  // El prompt completo para la IA
-            raw_question: userInput,      // La pregunta limpia para guardar en el log
+            question: questionToSend,  // El prompt completo para la IA
+            raw_question: userInput,   // La pregunta limpia del usuario para el log
             chat_history: chatHistory,
             mode: currentMode,
             conversation_id: conversationId // El nuevo ID de la conversación

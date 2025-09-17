@@ -11,10 +11,10 @@ Base = declarative_base()
 class ConversationLog(Base):
     __tablename__ = "conversation_logs"
     id = Column(Integer, primary_key=True, index=True)
-    conversation_id = Column(String, index=True) # <-- ESTA ES LA LÍNEA CLAVE
+    conversation_id = Column(String, index=True) # <-- COLUMNA AÑADIDA
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
     mode = Column(String, default="normal")
-    question = Column(String)
+    question = Column(String) # Aquí irá la pregunta limpia del usuario
     answer = Column(String)
     prompt_tokens = Column(Integer)
     completion_tokens = Column(Integer)

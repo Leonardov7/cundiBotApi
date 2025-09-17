@@ -66,8 +66,8 @@ def load_chain_on_startup():
             print(f"CHAT API - Error al cargar la cadena: {e}")
 
 class ChatRequest(BaseModel):
-    full_prompt: str
-    raw_question: str
+    question: str       # Este es el prompt completo que viene del frontend
+    raw_question: str   # Esta es la pregunta limpia del usuario para el log
     chat_history: list = []
     mode: str = "normal"
     conversation_id: str
@@ -81,23 +81,24 @@ class ChangePasswordRequest(BaseModel):
 # --- ENDPOINT DE CHAT CORREGIDO ---
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest, db: Session = Depends(get_db)):
-    if not conversation_chain: raise HTTPException(503, "Base de conocimiento no inicializada.")
+    if not conversation_chain:
+        raise HTTPException(status_code=503, detail="La base de conocimiento no está inicializada.")
     
     history_as_tuples = [tuple(item) for item in request.chat_history]
     
     with get_openai_callback() as cb:
         try:
-            # Usa el 'full_prompt' para la IA
+            # La IA usa el prompt completo
             result = conversation_chain.invoke({
-                "question": request.full_prompt, 
+                "question": request.question, 
                 "chat_history": history_as_tuples
             })
             answer = result["answer"]
             
-            # Usa el 'raw_question' para guardar en la base de datos
+            # Guardamos la pregunta limpia y el ID en la BBDD
             log_entry = ConversationLog(
                 conversation_id=request.conversation_id,
-                question=request.raw_question, 
+                question=request.raw_question, # <-- Guardando la pregunta limpia
                 answer=answer,
                 mode=request.mode,
                 prompt_tokens=cb.prompt_tokens,
@@ -107,7 +108,9 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
                 completion_cost=(cb.completion_tokens / 1_000_000) * 15.0,
                 total_cost=cb.total_cost
             )
-            db.add(log_entry); db.commit()
+            db.add(log_entry)
+            db.commit()
+            
             return ChatResponse(answer=answer)
         except Exception as e:
             import traceback

@@ -65,17 +65,20 @@ def load_chain_on_startup():
         except Exception as e:
             print(f"CHAT API - Error al cargar la cadena: {e}")
 
-class ChatRequest(BaseModel): 
+class ChatRequest(BaseModel):
     full_prompt: str
     raw_question: str
     chat_history: list = []
     mode: str = "normal"
     conversation_id: str
-class ChatResponse(BaseModel): answer: str
-class ChangePasswordRequest(BaseModel): new_password: str
 
-#------------------------------- Chat---------------
+class ChatResponse(BaseModel):
+    answer: str
+    
+class ChangePasswordRequest(BaseModel):
+    new_password: str
 
+# --- ENDPOINT DE CHAT CORREGIDO ---
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest, db: Session = Depends(get_db)):
     if not conversation_chain: raise HTTPException(503, "Base de conocimiento no inicializada.")
@@ -109,8 +112,7 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
         except Exception as e:
             import traceback
             traceback.print_exc()
-            raise HTTPException(500, str(e))
-
+            raise HTTPException(status_code=500, detail=str(e))
 
 
 def verify_admin_key(x_admin_api_key: str = Header(None), db: Session = Depends(get_db)):

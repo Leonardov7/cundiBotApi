@@ -183,3 +183,4 @@ async def get_conversations_csv(db: Session = Depends(get_db)):
     response.headers["Content-Disposition"] = f"attachment; filename=reporte_conversaciones_cundibot.csv"
     
     return response
+

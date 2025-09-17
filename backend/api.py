@@ -94,7 +94,7 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db)):
             })
             answer = result["answer"]
             
-            # La lógica de guardado en la base de datos no cambia
+            # La lógica de guardado en la base de datos no cambia---
             log = ConversationLog(
                 question=request.question,
                 answer=answer,

@@ -52,23 +52,20 @@ def load_chain_on_startup():
             retriever = vectorstore.as_retriever()
             
             # --- CAMBIO CLAVE AQUÍ ---
-            # Cambiamos return_messages a False para que la memoria trabaje con texto simple.
-            memory = ConversationBufferMemory(
-                memory_key='chat_history', 
-                return_messages=False, # <-- ANTES ERA True
-                output_key='answer'
-            )
+            # Se ha eliminado por completo el objeto 'ConversationBufferMemory'.
+            # La cadena ahora será 'stateless' y dependerá del historial enviado por el frontend.
             
             conversation_chain = ConversationalRetrievalChain.from_llm(
                 llm=ChatOpenAI(model_name="gpt-4o", temperature=0.7),
                 retriever=retriever,
-                memory=memory,
+                # Se ha eliminado el parámetro 'memory=memory'
+                return_source_documents=False,
                 combine_docs_chain_kwargs={"prompt": QA_PROMPT}
             )
-            print("Cadena conversacional única y flexible cargada exitosamente.")
+            print("Cadena conversacional (sin estado) cargada exitosamente.")
         except Exception as e:
             print(f"Error al cargar la cadena: {e}")
-
+            
 class ChatRequest(BaseModel): 
     full_prompt: str
     raw_question: str
